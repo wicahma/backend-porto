@@ -41,7 +41,7 @@ type Config struct {
 // It returns an error if any required variable is missing.
 func Load() (*Config, error) {
 	// Load .env first; real env vars take precedence over it.
-	loadDotEnv(".env")
+	LoadDotEnv(".env")
 
 	cfg := &Config{
 		Port:            getEnv("PORT", "8080"),

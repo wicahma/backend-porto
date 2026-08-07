@@ -72,6 +72,21 @@ sqlc generate
 
 4. Do not manually edit the generated `*.sql.go` files.
 
+## Database Migrations (goose)
+
+Schema changes are tracked with [goose](https://github.com/pressly/goose). Migrations live in `cmd/migrate/migrations/` and are embedded into the binary, so no separate tool is needed.
+
+```bash
+go run ./cmd/migrate up      # apply all pending migrations
+go run ./cmd/migrate down    # roll back the last migration
+go run ./cmd/migrate status  # list applied/pending migrations
+go run ./cmd/migrate version # show current version
+```
+
+`DATABASE_URL` is read from `.env` (or the environment).
+
+**Keep `schema.sql` in sync:** every migration's `Up` must mirror the DDL in `internal/<domain>/schema.sql` (the sqlc input). After adding a migration, run `sqlc generate`.
+
 ## Deployment
 
 This API is designed to run efficiently in constrained micro-server environments. A standard Dockerfile will compile the application into a minimal binary.

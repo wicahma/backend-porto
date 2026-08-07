@@ -15,7 +15,7 @@ func TestLoadDotEnv(t *testing.T) {
 
 	t.Setenv("A", "real") // existing env must win
 
-	loadDotEnv(path)
+	LoadDotEnv(path)
 
 	if got := os.Getenv("A"); got != "real" {
 		t.Fatalf("A = %q, want existing env value to win", got)
@@ -31,5 +31,5 @@ func TestLoadDotEnv(t *testing.T) {
 }
 
 func TestLoadDotEnvMissingFile(t *testing.T) {
-	loadDotEnv(filepath.Join(t.TempDir(), "nope")) // must not panic
+	LoadDotEnv(filepath.Join(t.TempDir(), "nope")) // must not panic
 }

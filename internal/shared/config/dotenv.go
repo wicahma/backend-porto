@@ -6,10 +6,10 @@ import (
 	"strings"
 )
 
-// loadDotEnv reads a dotenv file into the process environment.
+// LoadDotEnv reads a dotenv file into the process environment.
 // Variables already set in the real environment take precedence.
 // Missing/empty file is not an error.
-func loadDotEnv(path string) {
+func LoadDotEnv(path string) {
 	f, err := os.Open(path)
 	if err != nil {
 		return

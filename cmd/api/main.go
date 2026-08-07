@@ -117,7 +117,7 @@ func main() {
 	// Articles — public
 	mux.HandleFunc("GET /api/articles/count", articlesHandler.Count)
 	mux.HandleFunc("GET /api/articles/slug/{slug}", articlesHandler.GetBySlug)
-	mux.HandleFunc("GET /api/articles/{id}/related", articlesHandler.GetRelated)
+	mux.HandleFunc("GET /api/articles/related/{id}", articlesHandler.GetRelated)
 	mux.HandleFunc("GET /api/articles/{id}", articlesHandler.GetByID)
 	mux.HandleFunc("GET /api/articles", articlesHandler.List)
 
@@ -147,7 +147,7 @@ func main() {
 	mux.HandleFunc("DELETE /api/experiences/{id}", experiencesHandler.Delete)
 
 	// Storage — public
-	mux.HandleFunc("GET /api/storage/{*path}", storageHandler.Get)
+	mux.HandleFunc("GET /api/storage/{path...}", storageHandler.Get)
 
 	// Storage — protected
 	mux.HandleFunc("POST /api/storage/upload", storageHandler.Upload)

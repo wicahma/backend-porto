@@ -42,6 +42,7 @@ Write idiomatic, modern Go code.
 
 ## 5. Database & sqlc Workflow
 *   Database schema changes must be written in raw SQL inside `internal/<domain>/schema.sql`.
+*   Every schema change also needs a goose migration in `cmd/migrate/migrations/` (the `Up` block mirrors the DDL). Apply with `go run ./cmd/migrate up`.
 *   Queries must be written in raw SQL inside `internal/<domain>/queries.sql`.
 *   Always run `sqlc generate` to create the corresponding Go code; never manually edit the generated `*.sql.go` files.
 

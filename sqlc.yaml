@@ -1,10 +1,34 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "internal/users/queries.sql"
-    schema: "internal/users/schema.sql"
+    queries: "internal/auth/queries.sql"
+    schema: "internal/auth/schema.sql"
     gen:
       go:
-        package: "users"
-        out: "internal/users"
+        package: "auth"
+        out: "internal/auth"
+        sql_package: "pgx/v5"
+  - engine: "postgresql"
+    queries: "internal/articles/queries.sql"
+    schema: "internal/articles/schema.sql"
+    gen:
+      go:
+        package: "articles"
+        out: "internal/articles"
+        sql_package: "pgx/v5"
+  - engine: "postgresql"
+    queries: "internal/projects/queries.sql"
+    schema: "internal/projects/schema.sql"
+    gen:
+      go:
+        package: "projects"
+        out: "internal/projects"
+        sql_package: "pgx/v5"
+  - engine: "postgresql"
+    queries: "internal/experiences/queries.sql"
+    schema: "internal/experiences/schema.sql"
+    gen:
+      go:
+        package: "experiences"
+        out: "internal/experiences"
         sql_package: "pgx/v5"

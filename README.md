@@ -37,8 +37,8 @@ This project follows a strict modular monolith architecture.
 Copy the example environment file and update the credentials.
 ```bash
 cp .env.example .env
-
 ```
+The app loads `.env` automatically at startup. Real environment variables take precedence over `.env` values.
 
 
 3. **Download dependencies:**

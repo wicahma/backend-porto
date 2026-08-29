@@ -9,8 +9,8 @@ import (
 )
 
 type AdminUser struct {
-	ID        pgtype.UUID
-	Email     string
-	GithubID  pgtype.Text
-	CreatedAt pgtype.Timestamptz
+	ID        pgtype.UUID        `json:"id"`
+	Email     string             `json:"email"`
+	GithubID  pgtype.Text        `json:"github_id"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
 }

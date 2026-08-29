@@ -36,8 +36,8 @@ ON CONFLICT (email) DO UPDATE SET github_id = $2
 `
 
 type UpsertAdminParams struct {
-	Email    string
-	GithubID pgtype.Text
+	Email    string      `json:"email"`
+	GithubID pgtype.Text `json:"github_id"`
 }
 
 func (q *Queries) UpsertAdmin(ctx context.Context, arg UpsertAdminParams) error {

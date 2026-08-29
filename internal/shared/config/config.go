@@ -8,7 +8,13 @@ import (
 
 // Config holds all application configuration loaded from environment variables.
 type Config struct {
-	Port string
+	Port     string
+	LogLevel string
+
+	// Whether to write logs as JSON (true) or human-readable text (false).
+	// Human-readable is for local dev; set LOG_FORMAT=json when shipping logs
+	// to Grafana Loki / OpenTelemetry / Vector, which ingest JSON lines.
+	LogFormat string
 
 	// Security
 	APIKey          string
@@ -45,6 +51,8 @@ func Load() (*Config, error) {
 
 	cfg := &Config{
 		Port:            getEnv("PORT", "8080"),
+		LogLevel:        getEnv("LOG_LEVEL", "info"),
+		LogFormat:       getEnv("LOG_FORMAT", "text"),
 		APIKey:          os.Getenv("API_KEY"),
 		AccessTokenTTL:  getDuration("ACCESS_TOKEN_TTL", 15*time.Minute),
 		RefreshTokenTTL: getDuration("REFRESH_TOKEN_TTL", 7*24*time.Hour),

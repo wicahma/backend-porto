@@ -18,11 +18,11 @@ RETURNING id, company, location, total_duration, tags, is_current, created_at, u
 `
 
 type CreateExperienceParams struct {
-	Company       string
-	Location      string
-	TotalDuration string
-	Tags          []string
-	IsCurrent     pgtype.Bool
+	Company       string      `json:"company"`
+	Location      string      `json:"location"`
+	TotalDuration string      `json:"total_duration"`
+	Tags          []string    `json:"tags"`
+	IsCurrent     pgtype.Bool `json:"is_current"`
 }
 
 func (q *Queries) CreateExperience(ctx context.Context, arg CreateExperienceParams) (Experience, error) {
@@ -54,14 +54,14 @@ RETURNING id, experience_id, position, employment_type, description, competency,
 `
 
 type CreateJobParams struct {
-	ExperienceID   pgtype.UUID
-	Position       string
-	EmploymentType string
-	Description    string
-	Competency     []string
-	StartDate      string
-	EndDate        pgtype.Text
-	IsCurrent      pgtype.Bool
+	ExperienceID   pgtype.UUID `json:"experience_id"`
+	Position       string      `json:"position"`
+	EmploymentType string      `json:"employment_type"`
+	Description    string      `json:"description"`
+	Competency     []string    `json:"competency"`
+	StartDate      string      `json:"start_date"`
+	EndDate        pgtype.Text `json:"end_date"`
+	IsCurrent      pgtype.Bool `json:"is_current"`
 }
 
 func (q *Queries) CreateJob(ctx context.Context, arg CreateJobParams) (ExperienceJob, error) {
@@ -149,20 +149,20 @@ LIMIT $1 OFFSET $2
 `
 
 type GetExperiencesParams struct {
-	Limit  int32
-	Offset int32
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 type GetExperiencesRow struct {
-	ID            pgtype.UUID
-	Company       string
-	Location      string
-	TotalDuration string
-	Tags          []string
-	IsCurrent     pgtype.Bool
-	CreatedAt     pgtype.Timestamptz
-	UpdatedAt     pgtype.Timestamptz
-	TotalCount    int64
+	ID            pgtype.UUID        `json:"id"`
+	Company       string             `json:"company"`
+	Location      string             `json:"location"`
+	TotalDuration string             `json:"total_duration"`
+	Tags          []string           `json:"tags"`
+	IsCurrent     pgtype.Bool        `json:"is_current"`
+	CreatedAt     pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
+	TotalCount    int64              `json:"total_count"`
 }
 
 func (q *Queries) GetExperiences(ctx context.Context, arg GetExperiencesParams) ([]GetExperiencesRow, error) {
@@ -284,12 +284,12 @@ RETURNING id, company, location, total_duration, tags, is_current, created_at, u
 `
 
 type UpdateExperienceParams struct {
-	ID            pgtype.UUID
-	Company       string
-	Location      string
-	TotalDuration string
-	Tags          []string
-	IsCurrent     pgtype.Bool
+	ID            pgtype.UUID `json:"id"`
+	Company       string      `json:"company"`
+	Location      string      `json:"location"`
+	TotalDuration string      `json:"total_duration"`
+	Tags          []string    `json:"tags"`
+	IsCurrent     pgtype.Bool `json:"is_current"`
 }
 
 func (q *Queries) UpdateExperience(ctx context.Context, arg UpdateExperienceParams) (Experience, error) {

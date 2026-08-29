@@ -9,15 +9,15 @@ import (
 )
 
 type Project struct {
-	ID          pgtype.UUID
-	Title       string
-	Description string
-	Problem     pgtype.Text
-	Solution    pgtype.Text
-	Image       string
-	Tags        []string
-	Year        string
-	Link        pgtype.Text
-	CreatedAt   pgtype.Timestamptz
-	UpdatedAt   pgtype.Timestamptz
+	ID          pgtype.UUID        `json:"id"`
+	Title       string             `json:"title"`
+	Description string             `json:"description"`
+	Problem     pgtype.Text        `json:"problem"`
+	Solution    pgtype.Text        `json:"solution"`
+	Image       string             `json:"image"`
+	Tags        []string           `json:"tags"`
+	Year        string             `json:"year"`
+	Link        pgtype.Text        `json:"link"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
 }

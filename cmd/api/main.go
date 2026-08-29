@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,6 +16,7 @@ import (
 	"backend-porto/internal/projects"
 	"backend-porto/internal/shared/config"
 	"backend-porto/internal/shared/database"
+	"backend-porto/internal/shared/logger"
 	"backend-porto/internal/shared/middleware"
 	"backend-porto/internal/storage"
 
@@ -26,8 +27,11 @@ func main() {
 	// ---- Load Config ----
 	cfg, err := config.Load()
 	if err != nil {
-		log.Fatalf("failed to load config: %v", err)
+		// No logger yet; use the default slog logger (writes to stderr).
+		// Only replace with logger.New after config loads.
+		logger.Fatal("failed to load config", err)
 	}
+	slog.SetDefault(logger.New(cfg.LogLevel, cfg.LogFormat))
 
 	// ---- Database ----
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -35,14 +39,14 @@ func main() {
 
 	pool, err := database.NewPostgresPool(ctx, cfg.DatabaseURL)
 	if err != nil {
-		log.Fatalf("failed to connect to postgres: %v", err)
+		logger.Fatal("failed to connect to postgres", err)
 	}
 	defer pool.Close()
 
 	// Redis is optional
 	redisClient, err := database.NewRedisClient(ctx, cfg.RedisURL)
 	if err != nil {
-		log.Printf("warning: redis not available: %v", err)
+		slog.Warn("redis not available", "error", err)
 	}
 	if redisClient != nil {
 		defer redisClient.Close()
@@ -57,8 +61,13 @@ func main() {
 		BucketName:      cfg.S3BucketName,
 	})
 	if err != nil {
-		log.Fatalf("failed to create S3 client: %v", err)
+		logger.Fatal("failed to create S3 client", err)
 	}
+	// Verify endpoint, credentials, and bucket before serving requests.
+	if err := s3Client.CheckBucket(ctx); err != nil {
+		logger.Fatal("S3 check failed (endpoint, credentials, or bucket invalid)", err)
+	}
+	slog.Info("S3 storage: connected and bucket verified")
 
 	// ---- Auth Domain ----
 	authQueries := auth.New(pool)
@@ -193,15 +202,17 @@ func main() {
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer shutdownCancel()
 
-		log.Println("shutting down gracefully...")
+		slogger := slog.With("component", "shutdown")
+		slogger.Info("shutting down gracefully...")
 		if err := srv.Shutdown(shutdownCtx); err != nil {
-			log.Printf("shutdown error: %v", err)
+			slogger.Error("shutdown error", "error", err)
 		}
 	}()
 
 	fmt.Printf("Backend Porto API starting on http://localhost%s\n", port)
+	slog.Info("server listening", "addr", port)
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
-		log.Fatalf("server failed: %v", err)
+		logger.Fatal("server failed", err)
 	}
 }
 

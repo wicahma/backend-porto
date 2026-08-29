@@ -70,6 +70,17 @@ func NewS3Client(ctx context.Context, cfg Config) (*S3Client, error) {
 	}, nil
 }
 
+func (c *S3Client) CheckBucket(ctx context.Context) error {
+	_, err := c.client.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
+		Bucket:  aws.String(c.bucketName),
+		MaxKeys: aws.Int32(1),
+	})
+	if err != nil {
+		return fmt.Errorf("checking bucket %q: %w", c.bucketName, err)
+	}
+	return nil
+}
+
 // UploadFile uploads a file to S3 and returns the generated file path.
 func (c *S3Client) UploadFile(ctx context.Context, folder, fileName, contentType string, reader io.Reader) (string, error) {
 	if !allowedFolders[folder] {

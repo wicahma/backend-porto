@@ -18,14 +18,14 @@ RETURNING id, title, description, problem, solution, image, tags, year, link, cr
 `
 
 type CreateProjectParams struct {
-	Title       string
-	Description string
-	Problem     pgtype.Text
-	Solution    pgtype.Text
-	Image       string
-	Tags        []string
-	Year        string
-	Link        pgtype.Text
+	Title       string      `json:"title"`
+	Description string      `json:"description"`
+	Problem     pgtype.Text `json:"problem"`
+	Solution    pgtype.Text `json:"solution"`
+	Image       string      `json:"image"`
+	Tags        []string    `json:"tags"`
+	Year        string      `json:"year"`
+	Link        pgtype.Text `json:"link"`
 }
 
 func (q *Queries) CreateProject(ctx context.Context, arg CreateProjectParams) (Project, error) {
@@ -107,23 +107,23 @@ LIMIT $1 OFFSET $2
 `
 
 type GetProjectsParams struct {
-	Limit  int32
-	Offset int32
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 type GetProjectsRow struct {
-	ID          pgtype.UUID
-	Title       string
-	Description string
-	Problem     pgtype.Text
-	Solution    pgtype.Text
-	Image       string
-	Tags        []string
-	Year        string
-	Link        pgtype.Text
-	CreatedAt   pgtype.Timestamptz
-	UpdatedAt   pgtype.Timestamptz
-	TotalCount  int64
+	ID          pgtype.UUID        `json:"id"`
+	Title       string             `json:"title"`
+	Description string             `json:"description"`
+	Problem     pgtype.Text        `json:"problem"`
+	Solution    pgtype.Text        `json:"solution"`
+	Image       string             `json:"image"`
+	Tags        []string           `json:"tags"`
+	Year        string             `json:"year"`
+	Link        pgtype.Text        `json:"link"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt   pgtype.Timestamptz `json:"updated_at"`
+	TotalCount  int64              `json:"total_count"`
 }
 
 func (q *Queries) GetProjects(ctx context.Context, arg GetProjectsParams) ([]GetProjectsRow, error) {
@@ -175,15 +175,15 @@ RETURNING id, title, description, problem, solution, image, tags, year, link, cr
 `
 
 type UpdateProjectParams struct {
-	ID          pgtype.UUID
-	Title       string
-	Description string
-	Problem     pgtype.Text
-	Solution    pgtype.Text
-	Image       string
-	Tags        []string
-	Year        string
-	Link        pgtype.Text
+	ID          pgtype.UUID `json:"id"`
+	Title       string      `json:"title"`
+	Description string      `json:"description"`
+	Problem     pgtype.Text `json:"problem"`
+	Solution    pgtype.Text `json:"solution"`
+	Image       string      `json:"image"`
+	Tags        []string    `json:"tags"`
+	Year        string      `json:"year"`
+	Link        pgtype.Text `json:"link"`
 }
 
 func (q *Queries) UpdateProject(ctx context.Context, arg UpdateProjectParams) (Project, error) {

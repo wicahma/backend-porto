@@ -9,26 +9,26 @@ import (
 )
 
 type Experience struct {
-	ID            pgtype.UUID
-	Company       string
-	Location      string
-	TotalDuration string
-	Tags          []string
-	IsCurrent     pgtype.Bool
-	CreatedAt     pgtype.Timestamptz
-	UpdatedAt     pgtype.Timestamptz
+	ID            pgtype.UUID        `json:"id"`
+	Company       string             `json:"company"`
+	Location      string             `json:"location"`
+	TotalDuration string             `json:"total_duration"`
+	Tags          []string           `json:"tags"`
+	IsCurrent     pgtype.Bool        `json:"is_current"`
+	CreatedAt     pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
 }
 
 type ExperienceJob struct {
-	ID             pgtype.UUID
-	ExperienceID   pgtype.UUID
-	Position       string
-	EmploymentType string
-	Description    string
-	Competency     []string
-	StartDate      string
-	EndDate        pgtype.Text
-	IsCurrent      pgtype.Bool
-	CreatedAt      pgtype.Timestamptz
-	UpdatedAt      pgtype.Timestamptz
+	ID             pgtype.UUID        `json:"id"`
+	ExperienceID   pgtype.UUID        `json:"experience_id"`
+	Position       string             `json:"position"`
+	EmploymentType string             `json:"employment_type"`
+	Description    string             `json:"description"`
+	Competency     []string           `json:"competency"`
+	StartDate      string             `json:"start_date"`
+	EndDate        pgtype.Text        `json:"end_date"`
+	IsCurrent      pgtype.Bool        `json:"is_current"`
+	CreatedAt      pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
 }

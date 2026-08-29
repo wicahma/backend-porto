@@ -9,19 +9,19 @@ import (
 )
 
 type Article struct {
-	ID              pgtype.UUID
-	Slug            string
-	Title           string
-	Content         string
-	Excerpt         pgtype.Text
-	Category        string
-	Image           string
-	Tags            []string
-	ReadTime        string
-	MetaTitle       pgtype.Text
-	MetaDescription pgtype.Text
-	MetaKeywords    []string
-	OgImage         pgtype.Text
-	CreatedAt       pgtype.Timestamptz
-	UpdatedAt       pgtype.Timestamptz
+	ID              pgtype.UUID        `json:"id"`
+	Slug            string             `json:"slug"`
+	Title           string             `json:"title"`
+	Content         string             `json:"content"`
+	Excerpt         pgtype.Text        `json:"excerpt"`
+	Category        string             `json:"category"`
+	Image           string             `json:"image"`
+	Tags            []string           `json:"tags"`
+	ReadTime        string             `json:"read_time"`
+	MetaTitle       pgtype.Text        `json:"meta_title"`
+	MetaDescription pgtype.Text        `json:"meta_description"`
+	MetaKeywords    []string           `json:"meta_keywords"`
+	OgImage         pgtype.Text        `json:"og_image"`
+	CreatedAt       pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
 }

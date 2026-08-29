@@ -18,8 +18,8 @@ SELECT EXISTS(
 `
 
 type CheckSlugExistsParams struct {
-	Slug    string
-	Column2 pgtype.UUID
+	Slug    string      `json:"slug"`
+	Column2 pgtype.UUID `json:"column_2"`
 }
 
 func (q *Queries) CheckSlugExists(ctx context.Context, arg CheckSlugExistsParams) (bool, error) {
@@ -39,18 +39,18 @@ INSERT INTO articles (
 `
 
 type CreateArticleParams struct {
-	Slug            string
-	Title           string
-	Content         string
-	Excerpt         pgtype.Text
-	Category        string
-	Image           string
-	Tags            []string
-	ReadTime        string
-	MetaTitle       pgtype.Text
-	MetaDescription pgtype.Text
-	MetaKeywords    []string
-	OgImage         pgtype.Text
+	Slug            string      `json:"slug"`
+	Title           string      `json:"title"`
+	Content         string      `json:"content"`
+	Excerpt         pgtype.Text `json:"excerpt"`
+	Category        string      `json:"category"`
+	Image           string      `json:"image"`
+	Tags            []string    `json:"tags"`
+	ReadTime        string      `json:"read_time"`
+	MetaTitle       pgtype.Text `json:"meta_title"`
+	MetaDescription pgtype.Text `json:"meta_description"`
+	MetaKeywords    []string    `json:"meta_keywords"`
+	OgImage         pgtype.Text `json:"og_image"`
 }
 
 func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (Article, error) {
@@ -171,27 +171,27 @@ LIMIT $1 OFFSET $2
 `
 
 type GetArticlesParams struct {
-	Limit  int32
-	Offset int32
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 type GetArticlesRow struct {
-	ID              pgtype.UUID
-	Slug            string
-	Title           string
-	Content         string
-	Excerpt         pgtype.Text
-	Category        string
-	Image           string
-	Tags            []string
-	ReadTime        string
-	MetaTitle       pgtype.Text
-	MetaDescription pgtype.Text
-	MetaKeywords    []string
-	OgImage         pgtype.Text
-	CreatedAt       pgtype.Timestamptz
-	UpdatedAt       pgtype.Timestamptz
-	TotalCount      int64
+	ID              pgtype.UUID        `json:"id"`
+	Slug            string             `json:"slug"`
+	Title           string             `json:"title"`
+	Content         string             `json:"content"`
+	Excerpt         pgtype.Text        `json:"excerpt"`
+	Category        string             `json:"category"`
+	Image           string             `json:"image"`
+	Tags            []string           `json:"tags"`
+	ReadTime        string             `json:"read_time"`
+	MetaTitle       pgtype.Text        `json:"meta_title"`
+	MetaDescription pgtype.Text        `json:"meta_description"`
+	MetaKeywords    []string           `json:"meta_keywords"`
+	OgImage         pgtype.Text        `json:"og_image"`
+	CreatedAt       pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
+	TotalCount      int64              `json:"total_count"`
 }
 
 func (q *Queries) GetArticles(ctx context.Context, arg GetArticlesParams) ([]GetArticlesRow, error) {
@@ -239,9 +239,9 @@ LIMIT $3
 `
 
 type GetRelatedArticlesParams struct {
-	Category string
-	ID       pgtype.UUID
-	Limit    int32
+	Category string      `json:"category"`
+	ID       pgtype.UUID `json:"id"`
+	Limit    int32       `json:"limit"`
 }
 
 func (q *Queries) GetRelatedArticles(ctx context.Context, arg GetRelatedArticlesParams) ([]Article, error) {
@@ -300,19 +300,19 @@ RETURNING id, slug, title, content, excerpt, category, image, tags, read_time, m
 `
 
 type UpdateArticleParams struct {
-	ID              pgtype.UUID
-	Slug            string
-	Title           string
-	Content         string
-	Excerpt         pgtype.Text
-	Category        string
-	Image           string
-	Tags            []string
-	ReadTime        string
-	MetaTitle       pgtype.Text
-	MetaDescription pgtype.Text
-	MetaKeywords    []string
-	OgImage         pgtype.Text
+	ID              pgtype.UUID `json:"id"`
+	Slug            string      `json:"slug"`
+	Title           string      `json:"title"`
+	Content         string      `json:"content"`
+	Excerpt         pgtype.Text `json:"excerpt"`
+	Category        string      `json:"category"`
+	Image           string      `json:"image"`
+	Tags            []string    `json:"tags"`
+	ReadTime        string      `json:"read_time"`
+	MetaTitle       pgtype.Text `json:"meta_title"`
+	MetaDescription pgtype.Text `json:"meta_description"`
+	MetaKeywords    []string    `json:"meta_keywords"`
+	OgImage         pgtype.Text `json:"og_image"`
 }
 
 func (q *Queries) UpdateArticle(ctx context.Context, arg UpdateArticleParams) (Article, error) {

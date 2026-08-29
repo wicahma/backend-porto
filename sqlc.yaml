@@ -8,6 +8,8 @@ sql:
         package: "auth"
         out: "internal/auth"
         sql_package: "pgx/v5"
+        emit_json_tags: true
+        json_tags_case_style: "snake"
   - engine: "postgresql"
     queries: "internal/articles/queries.sql"
     schema: "internal/articles/schema.sql"
@@ -16,6 +18,8 @@ sql:
         package: "articles"
         out: "internal/articles"
         sql_package: "pgx/v5"
+        emit_json_tags: true
+        json_tags_case_style: "snake"
   - engine: "postgresql"
     queries: "internal/projects/queries.sql"
     schema: "internal/projects/schema.sql"
@@ -24,6 +28,8 @@ sql:
         package: "projects"
         out: "internal/projects"
         sql_package: "pgx/v5"
+        emit_json_tags: true
+        json_tags_case_style: "snake"
   - engine: "postgresql"
     queries: "internal/experiences/queries.sql"
     schema: "internal/experiences/schema.sql"
@@ -32,3 +38,5 @@ sql:
         package: "experiences"
         out: "internal/experiences"
         sql_package: "pgx/v5"
+        emit_json_tags: true
+        json_tags_case_style: "snake"

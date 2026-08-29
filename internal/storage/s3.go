@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/smithy-go/middleware"
 )
 
 // S3Client wraps the AWS S3 client for file storage operations.
@@ -39,17 +40,8 @@ var allowedFolders = map[string]bool{
 
 // NewS3Client creates a new S3 client wrapper.
 func NewS3Client(ctx context.Context, cfg Config) (*S3Client, error) {
-	resolver := aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...any) (aws.Endpoint, error) {
-		return aws.Endpoint{
-			URL:               cfg.Endpoint,
-			SigningRegion:     cfg.Region,
-			HostnameImmutable: true,
-		}, nil
-	})
-
 	awsCfg, err := config.LoadDefaultConfig(ctx,
 		config.WithRegion(cfg.Region),
-		config.WithEndpointResolverWithOptions(resolver),
 		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(
 			cfg.AccessKeyID,
 			cfg.SecretAccessKey,
@@ -61,7 +53,14 @@ func NewS3Client(ctx context.Context, cfg Config) (*S3Client, error) {
 	}
 
 	client := s3.NewFromConfig(awsCfg, func(o *s3.Options) {
+		if cfg.Endpoint != "" {
+			o.BaseEndpoint = aws.String(cfg.Endpoint)
+		}
 		o.UsePathStyle = true
+		o.APIOptions = append(o.APIOptions, func(stack *middleware.Stack) error {
+			_, _ = stack.Finalize.Remove("DisableAcceptEncodingGzip")
+			return nil
+		})
 	})
 
 	return &S3Client{

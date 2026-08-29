@@ -1,0 +1,21 @@
+clone:
+  git:
+    image: bash
+    settings:
+      lfs: false
+
+labels:
+  backend: local
+
+steps:
+  - name: build-and-restart
+    image: bash
+    commands:
+      - export PATH="/usr/local/go/bin:/home/diama/go/bin:$PATH"
+      - go build -o porto-api ./cmd/api
+      - systemctl --user restart porto-api.service
+      - echo "Porto backend API successfully built and restarted"
+
+when:
+  event: push
+  branch: development

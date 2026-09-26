@@ -12,33 +12,35 @@ import (
 
 // CreateInput is the input for creating an article.
 type CreateInput struct {
-	Title           string
-	Content         string
-	Excerpt         string
-	Category        string
-	Image           string
-	Tags            []string
-	ReadTime        string
-	MetaTitle       string
-	MetaDescription string
-	MetaKeywords    []string
-	OgImage         string
+	Slug            string   `json:"slug"`
+	Title           string   `json:"title"`
+	Content         string   `json:"content"`
+	Excerpt         string   `json:"excerpt"`
+	Category        string   `json:"category"`
+	Image           string   `json:"image"`
+	Tags            []string `json:"tags"`
+	ReadTime        string   `json:"read_time"`
+	MetaTitle       string   `json:"meta_title"`
+	MetaDescription string   `json:"meta_description"`
+	MetaKeywords    []string `json:"meta_keywords"`
+	OgImage         string   `json:"og_image"`
 }
 
 // UpdateInput is the input for updating an article.
 type UpdateInput struct {
-	ID              string
-	Title           string
-	Content         string
-	Excerpt         string
-	Category        string
-	Image           string
-	Tags            []string
-	ReadTime        string
-	MetaTitle       string
-	MetaDescription string
-	MetaKeywords    []string
-	OgImage         string
+	ID              string   `json:"id"`
+	Slug            string   `json:"slug"`
+	Title           string   `json:"title"`
+	Content         string   `json:"content"`
+	Excerpt         string   `json:"excerpt"`
+	Category        string   `json:"category"`
+	Image           string   `json:"image"`
+	Tags            []string `json:"tags"`
+	ReadTime        string   `json:"read_time"`
+	MetaTitle       string   `json:"meta_title"`
+	MetaDescription string   `json:"meta_description"`
+	MetaKeywords    []string `json:"meta_keywords"`
+	OgImage         string   `json:"og_image"`
 }
 
 // PaginatedResponse represents a paginated list of articles.
@@ -135,7 +137,7 @@ func (s *Service) GetRelated(ctx context.Context, id, category string, limit int
 
 // Create creates a new article with slug generation and SEO defaults.
 func (s *Service) Create(ctx context.Context, input CreateInput) (Article, error) {
-	slug := generateSlug(input.Title)
+	slug := resolveSlug(input.Slug, input.Title)
 
 	// Validate slug uniqueness
 	exists, err := s.repo.CheckSlugExists(ctx, slug, pgtype.UUID{Valid: false})
@@ -185,7 +187,7 @@ func (s *Service) Update(ctx context.Context, input UpdateInput) (Article, error
 		return Article{}, fmt.Errorf("invalid id: %w", err)
 	}
 
-	slug := generateSlug(input.Title)
+	slug := resolveSlug(input.Slug, input.Title)
 
 	// Check slug uniqueness excluding self
 	exists, err := s.repo.CheckSlugExists(ctx, slug, uid)
@@ -270,4 +272,13 @@ func generateSlug(title string) string {
 	}
 
 	return s
+}
+
+// resolveSlug prefers an explicit slug, falling back to the title.
+// Both paths share the same sanitizer so a manual slug is normalized too.
+func resolveSlug(slug, title string) string {
+	if strings.TrimSpace(slug) != "" {
+		return generateSlug(slug)
+	}
+	return generateSlug(title)
 }

@@ -152,6 +152,33 @@ func (q *Queries) GetArticleBySlug(ctx context.Context, slug string) (Article, e
 	return i, err
 }
 
+const getArticleCategories = `-- name: GetArticleCategories :many
+SELECT DISTINCT category
+FROM articles
+WHERE category IS NOT NULL AND category != ''
+ORDER BY category ASC
+`
+
+func (q *Queries) GetArticleCategories(ctx context.Context) ([]string, error) {
+	rows, err := q.db.Query(ctx, getArticleCategories)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var category string
+		if err := rows.Scan(&category); err != nil {
+			return nil, err
+		}
+		items = append(items, category)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getArticleCount = `-- name: GetArticleCount :one
 SELECT COUNT(*) FROM articles
 `
@@ -166,13 +193,17 @@ func (q *Queries) GetArticleCount(ctx context.Context) (int64, error) {
 const getArticles = `-- name: GetArticles :many
 SELECT id, slug, title, content, excerpt, category, image, tags, read_time, meta_title, meta_description, meta_keywords, og_image, created_at, updated_at, COUNT(*) OVER() AS total_count
 FROM articles
+WHERE ($3::text = '' OR title ILIKE '%' || $3 || '%' OR excerpt ILIKE '%' || $3 || '%' OR category ILIKE '%' || $3 || '%')
+  AND ($4::text = '' OR category = $4)
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2
 `
 
 type GetArticlesParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+	Limit    int32  `json:"limit"`
+	Offset   int32  `json:"offset"`
+	Search   string `json:"search"`
+	Category string `json:"category"`
 }
 
 type GetArticlesRow struct {
@@ -195,7 +226,12 @@ type GetArticlesRow struct {
 }
 
 func (q *Queries) GetArticles(ctx context.Context, arg GetArticlesParams) ([]GetArticlesRow, error) {
-	rows, err := q.db.Query(ctx, getArticles, arg.Limit, arg.Offset)
+	rows, err := q.db.Query(ctx, getArticles,
+		arg.Limit,
+		arg.Offset,
+		arg.Search,
+		arg.Category,
+	)
 	if err != nil {
 		return nil, err
 	}

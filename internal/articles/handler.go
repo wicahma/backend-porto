@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"backend-porto/internal/shared/response"
 
@@ -22,11 +23,30 @@ func NewHandler(svc *Service) *Handler {
 	return &Handler{svc: svc}
 }
 
-// List returns paginated articles.
-// GET /api/articles?page=1&limit=20
+// List returns paginated articles with optional search and category filtering.
+// GET /api/articles?page=1&limit=20&search=foo&category=bar
 func (h *Handler) List(w http.ResponseWriter, r *http.Request) {
 	page, limit := parsePagination(r)
-	result, err := h.svc.List(r.Context(), page, limit)
+	search := r.URL.Query().Get("search")
+	if search == "" {
+		search = r.URL.Query().Get("q")
+	}
+	category := r.URL.Query().Get("category")
+	if strings.EqualFold(category, "all") {
+		category = ""
+	}
+	result, err := h.svc.List(r.Context(), page, limit, search, category)
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	response.Success(w, result)
+}
+
+// Categories returns all distinct article categories.
+// GET /api/articles/categories
+func (h *Handler) Categories(w http.ResponseWriter, r *http.Request) {
+	result, err := h.svc.GetCategories(r.Context())
 	if err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return

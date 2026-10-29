@@ -61,8 +61,8 @@ func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }
 
-// List returns paginated articles.
-func (s *Service) List(ctx context.Context, page, limit int) (*PaginatedResponse, error) {
+// List returns paginated articles with optional search and category filter.
+func (s *Service) List(ctx context.Context, page, limit int, search, category string) (*PaginatedResponse, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -71,7 +71,7 @@ func (s *Service) List(ctx context.Context, page, limit int) (*PaginatedResponse
 	}
 
 	offset := (page - 1) * limit
-	rows, err := s.repo.List(ctx, int32(limit), int32(offset))
+	rows, err := s.repo.List(ctx, int32(limit), int32(offset), strings.TrimSpace(search), strings.TrimSpace(category))
 	if err != nil {
 		return nil, fmt.Errorf("listing articles: %w", err)
 	}
@@ -107,6 +107,10 @@ func (s *Service) List(ctx context.Context, page, limit int) (*PaginatedResponse
 		Page:       page,
 		TotalPages: totalPages,
 	}, nil
+}
+// GetCategories returns all distinct article categories.
+func (s *Service) GetCategories(ctx context.Context) ([]string, error) {
+	return s.repo.GetCategories(ctx)
 }
 
 // GetByID returns an article by ID.

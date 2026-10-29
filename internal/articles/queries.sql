@@ -1,8 +1,16 @@
 -- name: GetArticles :many
 SELECT *, COUNT(*) OVER() AS total_count
 FROM articles
+WHERE (@search::text = '' OR title ILIKE '%' || @search || '%' OR excerpt ILIKE '%' || @search || '%' OR category ILIKE '%' || @search || '%')
+  AND (@category::text = '' OR category = @category)
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2;
+
+-- name: GetArticleCategories :many
+SELECT DISTINCT category
+FROM articles
+WHERE category IS NOT NULL AND category != ''
+ORDER BY category ASC;
 
 -- name: GetArticleByID :one
 SELECT * FROM articles WHERE id = $1;

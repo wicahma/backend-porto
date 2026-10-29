@@ -18,11 +18,20 @@ func NewRepository(q *Queries) *Repository {
 	return &Repository{q: q}
 }
 
-// List returns paginated articles ordered by created_at DESC.
-func (r *Repository) List(ctx context.Context, limit, offset int32) ([]GetArticlesRow, error) {
-	return r.q.GetArticles(ctx, GetArticlesParams{Limit: limit, Offset: offset})
+// List returns paginated articles ordered by created_at DESC with optional search and category filter.
+func (r *Repository) List(ctx context.Context, limit, offset int32, search, category string) ([]GetArticlesRow, error) {
+	return r.q.GetArticles(ctx, GetArticlesParams{
+		Limit:    limit,
+		Offset:   offset,
+		Search:   search,
+		Category: category,
+	})
 }
 
+// GetCategories returns all distinct article categories.
+func (r *Repository) GetCategories(ctx context.Context) ([]string, error) {
+	return r.q.GetArticleCategories(ctx)
+}
 // GetByID returns a single article by ID.
 func (r *Repository) GetByID(ctx context.Context, id pgtype.UUID) (Article, error) {
 	return r.q.GetArticleByID(ctx, id)

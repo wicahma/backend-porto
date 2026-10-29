@@ -125,11 +125,11 @@ func main() {
 
 	// Articles — public
 	mux.HandleFunc("GET /api/articles/count", articlesHandler.Count)
+	mux.HandleFunc("GET /api/articles/categories", articlesHandler.Categories)
 	mux.HandleFunc("GET /api/articles/slug/{slug}", articlesHandler.GetBySlug)
 	mux.HandleFunc("GET /api/articles/related/{id}", articlesHandler.GetRelated)
 	mux.HandleFunc("GET /api/articles/{id}", articlesHandler.GetByID)
 	mux.HandleFunc("GET /api/articles", articlesHandler.List)
-
 	// Articles — protected
 	mux.HandleFunc("POST /api/articles", articlesHandler.Create)
 	mux.HandleFunc("PUT /api/articles/{id}", articlesHandler.Update)

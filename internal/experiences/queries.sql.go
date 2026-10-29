@@ -12,9 +12,9 @@ import (
 )
 
 const createExperience = `-- name: CreateExperience :one
-INSERT INTO experiences (company, location, total_duration, tags, is_current)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING id, company, location, total_duration, tags, is_current, created_at, updated_at
+INSERT INTO experiences (company, location, total_duration, tags, logo, is_current)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, company, location, total_duration, tags, logo, is_current, created_at, updated_at
 `
 
 type CreateExperienceParams struct {
@@ -22,6 +22,7 @@ type CreateExperienceParams struct {
 	Location      string      `json:"location"`
 	TotalDuration string      `json:"total_duration"`
 	Tags          []string    `json:"tags"`
+	Logo          pgtype.Text `json:"logo"`
 	IsCurrent     pgtype.Bool `json:"is_current"`
 }
 
@@ -31,6 +32,7 @@ func (q *Queries) CreateExperience(ctx context.Context, arg CreateExperiencePara
 		arg.Location,
 		arg.TotalDuration,
 		arg.Tags,
+		arg.Logo,
 		arg.IsCurrent,
 	)
 	var i Experience
@@ -40,6 +42,7 @@ func (q *Queries) CreateExperience(ctx context.Context, arg CreateExperiencePara
 		&i.Location,
 		&i.TotalDuration,
 		&i.Tags,
+		&i.Logo,
 		&i.IsCurrent,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -111,7 +114,7 @@ func (q *Queries) DeleteJobsByExperienceID(ctx context.Context, experienceID pgt
 }
 
 const getExperienceByID = `-- name: GetExperienceByID :one
-SELECT id, company, location, total_duration, tags, is_current, created_at, updated_at FROM experiences WHERE id = $1
+SELECT id, company, location, total_duration, tags, logo, is_current, created_at, updated_at FROM experiences WHERE id = $1
 `
 
 func (q *Queries) GetExperienceByID(ctx context.Context, id pgtype.UUID) (Experience, error) {
@@ -123,6 +126,7 @@ func (q *Queries) GetExperienceByID(ctx context.Context, id pgtype.UUID) (Experi
 		&i.Location,
 		&i.TotalDuration,
 		&i.Tags,
+		&i.Logo,
 		&i.IsCurrent,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -142,7 +146,7 @@ func (q *Queries) GetExperienceCount(ctx context.Context) (int64, error) {
 }
 
 const getExperiences = `-- name: GetExperiences :many
-SELECT id, company, location, total_duration, tags, is_current, created_at, updated_at, COUNT(*) OVER() AS total_count
+SELECT id, company, location, total_duration, tags, logo, is_current, created_at, updated_at, COUNT(*) OVER() AS total_count
 FROM experiences
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2
@@ -159,6 +163,7 @@ type GetExperiencesRow struct {
 	Location      string             `json:"location"`
 	TotalDuration string             `json:"total_duration"`
 	Tags          []string           `json:"tags"`
+	Logo          pgtype.Text        `json:"logo"`
 	IsCurrent     pgtype.Bool        `json:"is_current"`
 	CreatedAt     pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
@@ -180,6 +185,7 @@ func (q *Queries) GetExperiences(ctx context.Context, arg GetExperiencesParams) 
 			&i.Location,
 			&i.TotalDuration,
 			&i.Tags,
+			&i.Logo,
 			&i.IsCurrent,
 			&i.CreatedAt,
 			&i.UpdatedAt,
@@ -277,10 +283,11 @@ UPDATE experiences SET
   location = $3,
   total_duration = $4,
   tags = $5,
-  is_current = $6,
+  logo = $6,
+  is_current = $7,
   updated_at = NOW()
 WHERE id = $1
-RETURNING id, company, location, total_duration, tags, is_current, created_at, updated_at
+RETURNING id, company, location, total_duration, tags, logo, is_current, created_at, updated_at
 `
 
 type UpdateExperienceParams struct {
@@ -289,6 +296,7 @@ type UpdateExperienceParams struct {
 	Location      string      `json:"location"`
 	TotalDuration string      `json:"total_duration"`
 	Tags          []string    `json:"tags"`
+	Logo          pgtype.Text `json:"logo"`
 	IsCurrent     pgtype.Bool `json:"is_current"`
 }
 
@@ -299,6 +307,7 @@ func (q *Queries) UpdateExperience(ctx context.Context, arg UpdateExperiencePara
 		arg.Location,
 		arg.TotalDuration,
 		arg.Tags,
+		arg.Logo,
 		arg.IsCurrent,
 	)
 	var i Experience
@@ -308,6 +317,7 @@ func (q *Queries) UpdateExperience(ctx context.Context, arg UpdateExperiencePara
 		&i.Location,
 		&i.TotalDuration,
 		&i.Tags,
+		&i.Logo,
 		&i.IsCurrent,
 		&i.CreatedAt,
 		&i.UpdatedAt,

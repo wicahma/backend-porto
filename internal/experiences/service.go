@@ -27,6 +27,7 @@ type CreateInput struct {
 	Company  string   `json:"company"`
 	Location string   `json:"location"`
 	Tags     []string `json:"tags"`
+	Logo     string   `json:"logo"`
 	Jobs     []JobInput `json:"jobs"`
 }
 
@@ -36,6 +37,7 @@ type UpdateInput struct {
 	Company  string   `json:"company"`
 	Location string   `json:"location"`
 	Tags     []string `json:"tags"`
+	Logo     string   `json:"logo"`
 	Jobs     []JobInput `json:"jobs"`
 }
 
@@ -46,6 +48,7 @@ type ExperienceWithJobs struct {
 	Location      string           `json:"location"`
 	TotalDuration string           `json:"total_duration"`
 	Tags          []string         `json:"tags"`
+	Logo          string           `json:"logo"`
 	IsCurrent     pgtype.Bool      `json:"is_current"`
 	Jobs          []ExperienceJob  `json:"jobs"`
 	CreatedAt     pgtype.Timestamptz `json:"created_at"`
@@ -119,6 +122,7 @@ func (s *Service) List(ctx context.Context, page, limit int) (*PaginatedResponse
 			Location:      row.Location,
 			TotalDuration: row.TotalDuration,
 			Tags:          row.Tags,
+			Logo:          textToString(row.Logo),
 			IsCurrent:     row.IsCurrent,
 			Jobs:          expJobs,
 			CreatedAt:     row.CreatedAt,
@@ -162,6 +166,7 @@ func (s *Service) GetByID(ctx context.Context, id string) (*ExperienceWithJobs, 
 		Location:      exp.Location,
 		TotalDuration: exp.TotalDuration,
 		Tags:          exp.Tags,
+		Logo:          textToString(exp.Logo),
 		IsCurrent:     exp.IsCurrent,
 		Jobs:          jobs,
 		CreatedAt:     exp.CreatedAt,
@@ -187,6 +192,7 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (*ExperienceWit
 		Location:      input.Location,
 		TotalDuration: totalDuration,
 		Tags:          input.Tags,
+		Logo:          toPgText(input.Logo),
 		IsCurrent:     pgtype.Bool{Bool: isCurrent, Valid: true},
 	})
 	if err != nil {
@@ -217,6 +223,7 @@ func (s *Service) Create(ctx context.Context, input CreateInput) (*ExperienceWit
 		Location:      exp.Location,
 		TotalDuration: exp.TotalDuration,
 		Tags:          exp.Tags,
+		Logo:          textToString(exp.Logo),
 		IsCurrent:     exp.IsCurrent,
 		Jobs:          jobs,
 		CreatedAt:     exp.CreatedAt,
@@ -251,6 +258,7 @@ func (s *Service) Update(ctx context.Context, input UpdateInput) (*ExperienceWit
 		Location:      input.Location,
 		TotalDuration: totalDuration,
 		Tags:          input.Tags,
+		Logo:          toPgText(input.Logo),
 		IsCurrent:     pgtype.Bool{Bool: isCurrent, Valid: true},
 	})
 	if err != nil {
@@ -281,6 +289,7 @@ func (s *Service) Update(ctx context.Context, input UpdateInput) (*ExperienceWit
 		Location:      exp.Location,
 		TotalDuration: exp.TotalDuration,
 		Tags:          exp.Tags,
+		Logo:          textToString(exp.Logo),
 		IsCurrent:     exp.IsCurrent,
 		Jobs:          jobs,
 		CreatedAt:     exp.CreatedAt,

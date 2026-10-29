@@ -14,6 +14,7 @@ type Experience struct {
 	Location      string             `json:"location"`
 	TotalDuration string             `json:"total_duration"`
 	Tags          []string           `json:"tags"`
+	Logo          pgtype.Text        `json:"logo"`
 	IsCurrent     pgtype.Bool        `json:"is_current"`
 	CreatedAt     pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`

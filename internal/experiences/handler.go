@@ -152,6 +152,13 @@ func toPgText(s string) pgtype.Text {
 	return pgtype.Text{String: s, Valid: true}
 }
 
+func textToString(t pgtype.Text) string {
+	if !t.Valid {
+		return ""
+	}
+	return t.String
+}
+
 func uuidToString(uid pgtype.UUID) string {
 	if !uid.Valid {
 		return ""

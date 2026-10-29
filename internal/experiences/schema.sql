@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS experiences (
   location TEXT NOT NULL,
   total_duration TEXT NOT NULL,
   tags TEXT[] DEFAULT '{}',
+  logo TEXT,
   is_current BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

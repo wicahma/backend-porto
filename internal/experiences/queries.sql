@@ -18,8 +18,8 @@ WHERE experience_id = ANY($1::uuid[])
 ORDER BY start_date DESC;
 
 -- name: CreateExperience :one
-INSERT INTO experiences (company, location, total_duration, tags, is_current)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO experiences (company, location, total_duration, tags, logo, is_current)
+VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 
 -- name: CreateJob :one
@@ -33,7 +33,8 @@ UPDATE experiences SET
   location = $3,
   total_duration = $4,
   tags = $5,
-  is_current = $6,
+  logo = $6,
+  is_current = $7,
   updated_at = NOW()
 WHERE id = $1
 RETURNING *;

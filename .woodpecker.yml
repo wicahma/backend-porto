@@ -8,6 +8,17 @@ labels:
   backend: local
 
 steps:
+  - name: migrate
+    image: bash
+    environment:
+      DATABASE_URL:
+        from_secret: DATABASE_URL
+    commands:
+      - export PATH="/usr/local/go/bin:/home/diama/go/bin:$PATH"
+      - export GOMODCACHE="/home/diama/ci-caches/go-mod"
+      - export GOCACHE="/home/diama/ci-caches/go-build"
+      - go run ./cmd/migrate up
+
   - name: build
     image: bash
     commands:

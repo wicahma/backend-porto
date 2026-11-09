@@ -20,8 +20,8 @@ steps:
   - name: verify
     image: bash
     commands:
-      - 'curl -fsS -o /dev/null -w "health=%{http_code}\n" "http://127.0.0.1:${PORT}/health"'
-      - 'curl -fsS -o /dev/null -w "api=%{http_code}\n" -H "X-API-Key: ${API_KEY}" "http://127.0.0.1:${PORT}/api/experiences?page=1&limit=1"'
+      - 'curl -fsS -o /dev/null -w "health=%{http_code}\n" "http://127.0.0.1:$PORT/health"'
+      - 'curl -fsS -o /dev/null -w "api=%{http_code}\n" -H "X-API-Key: $API_KEY" "http://127.0.0.1:$PORT/api/experiences?page=1&limit=1"'
 
 when:
   - event: [push, manual]

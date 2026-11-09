@@ -13,6 +13,8 @@ steps:
     commands:
       - export PATH="/usr/local/go/bin:/home/diama/go/bin:$PATH"
       - go build -trimpath -o porto-api ./cmd/api
+      - chmod a+x "$PWD" "$(dirname "$PWD")"
+      - chmod a+r "$PWD/porto-api"
       - /usr/bin/sudo -n -u diama /home/diama/bin/porto-api-ci-deploy "$PWD/porto-api"
 
   - name: verify

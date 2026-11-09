@@ -8,14 +8,19 @@ labels:
   backend: local
 
 steps:
-  - name: build-and-restart
+  - name: build
     image: bash
     commands:
       - export PATH="/usr/local/go/bin:/home/diama/go/bin:$PATH"
-      - go build -o porto-api ./cmd/api
-      - systemctl --user restart porto-api.service
-      - echo "Porto backend API successfully built and restarted"
+      - go build -trimpath -o porto-api ./cmd/api
+      - /usr/bin/sudo -n -u diama /home/diama/bin/porto-api-ci-deploy "$PWD/porto-api"
+
+  - name: verify
+    image: bash
+    commands:
+      - curl -fsS -o /dev/null -w 'health=%{http_code}\n' "http://127.0.0.1:${PORT}/health"
+      - curl -fsS -o /dev/null -w 'api=%{http_code}\n' -H "X-API-Key: ${API_KEY}" "http://127.0.0.1:${PORT}/api/experiences?page=1&limit=1"
 
 when:
-  event: push
-  branch: development
+  - event: [push, manual]
+    branch: [production]

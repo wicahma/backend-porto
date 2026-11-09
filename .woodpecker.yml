@@ -12,6 +12,8 @@ steps:
     image: bash
     commands:
       - export PATH="/usr/local/go/bin:/home/diama/go/bin:$PATH"
+      - export GOMODCACHE="/home/diama/ci-caches/go-mod"
+      - export GOCACHE="/home/diama/ci-caches/go-build"
       - go build -trimpath -o porto-api ./cmd/api
       - chmod a+x "$PWD" "$(dirname "$PWD")"
       - chmod a+r "$PWD/porto-api"
